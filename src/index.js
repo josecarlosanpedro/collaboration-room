@@ -1,25 +1,27 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { createStore, compose, applyMiddleware } from "redux";
-import { createEpicMiddleware } from "redux-observable";
-import "rxjs";
-import App from "./root/App";
-import rootReducer from "./stores/reducers";
-import rootEpic from "./stores/actions";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import { createEpicMiddleware } from 'redux-observable';
+import 'rxjs';
+import App from './root/App';
+import rootReducer from './stores/reducers';
+import rootEpic from './stores/actions';
+import 'antd/dist/antd.css';
 
-import serviceWorker from "./serviceWorker";
+import serviceWorker from './serviceWorker';
 
 const composeEnhancers =
-  process.env.NODE_ENV === "development"
+  (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev') &&
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    : null || compose;
+    : compose;
 
 const epicMiddleware = createEpicMiddleware();
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(epicMiddleware))
+  composeEnhancers(applyMiddleware(epicMiddleware)),
 );
 epicMiddleware.run(rootEpic);
 ReactDOM.render(
@@ -28,6 +30,6 @@ ReactDOM.render(
       <App />
     </BrowserRouter>
   </Provider>,
-  document.getElementById("root")
+  document.getElementById('root'),
 );
 serviceWorker();

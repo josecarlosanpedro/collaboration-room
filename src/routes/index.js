@@ -1,14 +1,12 @@
-import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
-import Main from "../modules/Main";
-import Home from "../modules/Home";
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Classroom from '../modules/Classroom';
 
 class Routes extends Component {
   render() {
     return (
       <Switch>
-        <Route path="/" component={Main} exact />
-        <Route path="/Home" component={Home} exact />
+        <Route path="/" component={Classroom} exact />
       </Switch>
     );
   }

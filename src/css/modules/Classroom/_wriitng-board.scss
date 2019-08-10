@@ -1,0 +1,19 @@
+.writing-board-section {
+  height: 100%;
+  border-radius: 5px;
+  margin: 10px 10px;
+  background: white;
+  box-shadow: 1px 2px 8px 2px #cccccc;
+
+  .title {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    height: 30px;
+    padding-top: 4px;
+    padding-left: 10px;
+  }
+  .content {
+    position: relative;
+    padding: 0 10px;
+  }
+}
