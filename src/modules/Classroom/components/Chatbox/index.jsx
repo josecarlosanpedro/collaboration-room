@@ -27,8 +27,10 @@ const Chatbox = () => (
                 {item.message}
               </div>
               <div className="sent-details">
-                <span className="sender-name">{item.senderName}</span>
-                <span className="time">{item.time}</span>
+                <span className="sender-name">
+                  {!isFromUser ? item.senderName : null}
+                </span>
+                <span className="time"> {item.time}</span>
               </div>
             </div>
           );
