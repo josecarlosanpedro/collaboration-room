@@ -36,11 +36,12 @@ const Chatbox = () => (
           );
         })}
       </div>
-      <Input.TextArea
-        className="input-text"
-        placeholder="Type a message..."
-        autosize={{ minRows: 1, maxRows: 4 }}
-      />
+      <div className="input-text-container">
+        <Input.TextArea
+          className="input-text"
+          placeholder="Type a message..."
+        />
+      </div>
     </div>
   </section>
 );

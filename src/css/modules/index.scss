@@ -1,3 +1,20 @@
 .content-section {
   @import './Classroom/main.scss';
+
+  position: relative;
+  display: contents;
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 5px;
+  }
 }

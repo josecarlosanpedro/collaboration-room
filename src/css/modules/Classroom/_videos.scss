@@ -1,9 +1,9 @@
 .videos-section {
   height: 100%;
-  margin: 10px 10px;
   background-color: white;
   border-radius: 5px;
   box-shadow: 1px 2px 8px 2px #e6e5ed;
+  position: relative;
 
   .title {
     color: white;
@@ -13,27 +13,23 @@
     background-color: #393864;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
+    position: absolute;
+    width: 100%;
   }
   .content {
     position: relative;
-    height: 93%;
-    padding: 0 10px;
+    height: 100%;
+    padding: 0 20px;
     text-align: center;
     overflow-y: auto;
+    padding: 40px 10px 10px 10px;
   }
   .item-user {
-    padding: 10px;
-    &:first-child {
-      padding-top: 5px;
-    }
-    &:last-child {
-      padding-bottom: 5px;
-    }
+    height: 25%;
   }
   .user-video {
-    max-width: 180px;
+    height: 75%;
     width: 100%;
-    height: 100px;
     background-color: #e6e5ed;
     text-align: center;
     margin: auto;
@@ -48,14 +44,37 @@
     color: #666666;
     font-size: 30px;
     display: block;
-    padding-top: 33px;
+    height: 100%;
+  }
+  .video-icon.anticon svg {
+    height: 100%;
   }
   .user-fullname {
+    font-size: 12px;
     display: block;
-    color: 464487;
     font-weight: 600;
   }
   .fullname-icon {
     margin-right: 5px;
+  }
+
+  @media only screen and (max-width: 991px) {
+    .item-user {
+      width: 50%;
+      display: inline-block;
+      padding: 10px;
+      height: 50%;
+    }
+  }
+  @media only screen and (max-width: 576px) {
+    .item-user {
+      max-width: 200px;
+      width: 100%;
+      min-width: 100;
+      display: block;
+      padding: 10px;
+      height: 25%;
+      margin: auto;
+    }
   }
 }

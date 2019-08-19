@@ -46,7 +46,7 @@ export const peopleData = [
 export const messageData = [
   {
     messageId: 1,
-    message: 'We will start the disccussion of Chapter 1.',
+    message: 'We will start the discussion of Chapter 1.',
     senderName: 'Jose Carlo San Pedro',
     roleName: 'teacher',
     time: '10:00 am',
