@@ -30,11 +30,11 @@
   .user-video {
     height: 75%;
     width: 100%;
-    background-color: #e6e5ed;
     text-align: center;
     margin: auto;
     cursor: pointer;
     border-radius: 5px;
+    background-color: #e6e5ed;
     &:hover {
       background-color: white;
       border: 3px solid #e6e5ed;
@@ -76,5 +76,36 @@
       height: 25%;
       margin: auto;
     }
+  }
+
+  .modal-user-video.ant-modal {
+    width: 60% !important;
+    height: 80%;
+    min-width: 500px;
+  }
+  .modal-user-video.ant-modal .ant-modal-header {
+    border-radius: 20px;
+    border-bottom: none;
+  }
+  .modal-user-video.ant-modal .ant-modal-content {
+    border-radius: 20px;
+    height: 100%;
+  }
+  .modal-user-video .ant-modal-body {
+    padding: 0 20px 80px 20px;
+    height: 100%;
+  }
+  .modal-user-video .video-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background-color: #e6e5ed;
+    &:hover {
+      background-color: white;
+      border: 3px solid #e6e5ed;
+    }
+  }
+  .modal-user-video .video-icon {
+    font-size: 80px;
   }
 }

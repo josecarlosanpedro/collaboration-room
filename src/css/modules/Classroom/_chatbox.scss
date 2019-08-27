@@ -20,9 +20,10 @@
     position: relative;
     height: 100%;
     padding-top: 30px;
+    padding-bottom: 50px;
   }
   .message-container {
-    height: 80%;
+    height: 100%;
     padding: 5px 10px;
     overflow-y: auto;
   }
@@ -53,11 +54,34 @@
     color: #cccccc;
   }
   .input-text-container {
-    height: 20%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
   }
   .input-text {
-    border: 1px solid #3188bc;
+    border: 1px solid #cccccc;
     resize: none;
     height: 100%;
+    padding: 12px 10px;
+    padding-right: 25px;
+    &:focus {
+      border: 1px solid #3188bc;
+    }
+  }
+  .send-button {
+    width: 20px;
+    height: 25px;
+    padding: 0;
+    position: absolute;
+    bottom: 14px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+  }
+  .send-icon {
+    width: 20px;
+    border-radius: 10px;
   }
 }

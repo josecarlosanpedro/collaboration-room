@@ -31,11 +31,11 @@
   .item {
     display: flex;
     width: 100%;
+    height: auto;
+    border-radius: 10px;
     background: transparent;
     border: none;
     outline: none;
-    height: auto;
-    border-radius: 10px;
     box-shadow: none;
     &:hover {
       background-color: #f3f8fb;

@@ -11,10 +11,12 @@ const Documents = () => (
     <div className="content-container">
       <div className="contents">
         {documentData.map(item => (
-          <Button className="item" key={item.id}>
-            <Icon type="file-text" className="item-icon" />
-            <span className="item-title">{item.fileName}</span>
-          </Button>
+          <a href={item.path} target="_blank" rel="noopener noreferrer">
+            <Button className="item" key={item.id}>
+              <Icon type="file-text" className="item-icon" />
+              <span className="item-title">{item.fileName}</span>
+            </Button>
+          </a>
         ))}
       </div>
     </div>

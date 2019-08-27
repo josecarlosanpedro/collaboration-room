@@ -2,7 +2,9 @@ import React from 'react';
 import classnames from 'classnames';
 import Input from 'antd/lib/input';
 import Icon from 'antd/lib/icon';
+import Button from 'antd/lib/button';
 import { messageData } from '../../helpers/fakeData';
+import sendIcon from '../../../../images/send_icon.png';
 
 const Chatbox = () => (
   <section className="chatbox-section">
@@ -41,6 +43,9 @@ const Chatbox = () => (
           className="input-text"
           placeholder="Type a message..."
         />
+        <Button className="send-button">
+          <img src={sendIcon} alt="send" className="send-icon" />
+        </Button>
       </div>
     </div>
   </section>

@@ -2,17 +2,17 @@ export const documentData = [
   {
     id: 1,
     fileName: 'Chapter 1',
-    path: '',
+    path: 'https://google.com',
   },
   {
     id: 2,
     fileName: 'Chapter 2',
-    path: '',
+    path: 'https://google.com',
   },
   {
     id: 3,
     fileName: 'Chapter 3',
-    path: '',
+    path: 'https://google.com',
   },
 ];
 
