@@ -45,6 +45,7 @@ const Classroom = () => {
 
   return (
     <section className="classroom-section">
+
       <Col md={24} lg={5} className="classroom-item">
         <Videos />
       </Col>

@@ -35,6 +35,7 @@ const Chatbox = props => {
     console.log('error', data)
   }
   const handleSend = () => {
+    console.log('message', message)
     if (message !== "") {
       firebase.database()
         .ref()
@@ -100,8 +101,10 @@ const Chatbox = props => {
             value={message}
             onChange={handleMessage}
           />
-          <Popover placement="topRight" content={<Picker onSelect={emojiClick} />} trigger="click">
-            <Button>TL</Button>
+          <Popover placement="topRight" content={<Picker onSelect={emojiClick} />} trigger="click" className="emoji-button">
+            <Button>
+              <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ899Ul2vNvOC2958E80je-twW9BNs0CveqgZuvYYrkecloJL5naw' alt="send" className="send-icon" />
+            </Button>
           </Popover>
           <Button onClick={handleSend} className="send-button">
             <img src={sendIcon} alt="send" className="send-icon" />

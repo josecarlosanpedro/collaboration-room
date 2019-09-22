@@ -80,8 +80,21 @@
     border: none;
     border-radius: 10px;
   }
+  .emoji-button {
+    width: 20px;
+    height: 25px;
+    padding-right: 45px;
+    position: absolute;
+    bottom: 14px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+  }
+  
   .send-icon {
     width: 20px;
     border-radius: 10px;
   }
+  
 }

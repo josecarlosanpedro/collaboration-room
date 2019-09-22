@@ -21,13 +21,15 @@ class Header extends Component {
       className: 'leave-modal',
     });
   };
+
   render() {
     return (
       <section className="header-section">
         <Button className="leave-button" type="link" onClick={this.showConfirm}>
           Leave Classroom <Icon type="export" className="leave-icon" />
         </Button>
-      </section>
+
+      </section >
     );
   }
 }
