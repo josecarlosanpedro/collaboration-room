@@ -3,41 +3,39 @@ import classnames from 'classnames';
 import Input from 'antd/lib/input';
 import Popover from 'antd/lib/popover';
 import Icon from 'antd/lib/icon';
-import Button from 'antd/lib/button'
-import { messageData } from '../../helpers/fakeData';
+import Button from 'antd/lib/button';
 import sendIcon from '../../../../images/send_icon.png';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import firebase from 'firebase';
 import uuid from 'uuid/v1';
-import 'emoji-mart/css/emoji-mart.css'
-import { Picker } from 'emoji-mart'
-
+import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
 
 const Chatbox = props => {
   const [message, setMessage] = useState('');
   const [conversationList, setConversationList] = useState([]);
 
   useEffect(() => {
-    const conversation = firebase.database()
+    const conversation = firebase
+      .database()
       .ref()
       .child(`chat-box/${props.room}`);
     conversation.on('value', conversationSuccess, conversationError);
   }, []);
 
   const conversationSuccess = data => {
-
     if (data.val() != null) {
-
-      setConversationList(Object.values(data.val()))
+      setConversationList(Object.values(data.val()));
     }
-  }
+  };
   const conversationError = data => {
-    console.log('error', data)
-  }
+    console.log('error', data);
+  };
   const handleSend = () => {
-    console.log('message', message)
-    if (message !== "") {
-      firebase.database()
+    console.log('message', message);
+    if (message !== '') {
+      firebase
+        .database()
         .ref()
         .child(`chat-box/${props.room}/${uuid()}`)
         .set({
@@ -45,28 +43,29 @@ const Chatbox = props => {
           userId: props.user._id,
           firstName: props.user.firstName,
           lastName: props.user.lastName,
-          logo: props.user.logo || 'https://icon-library.net/images/no-user-image-icon/no-user-image-icon-27.jpg',
-          timestamp: firebase.database.ServerValue.TIMESTAMP
+          logo:
+            props.user.logo ||
+            'https://icon-library.net/images/no-user-image-icon/no-user-image-icon-27.jpg',
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
         })
         .then(() => {
-          setMessage('')
-          console.log('nice')
+          setMessage('');
+          console.log('nice');
         });
     }
-
-  }
+  };
   const handleMessage = e => {
-    setMessage(e.target.value)
-  }
+    setMessage(e.target.value);
+  };
   const emojiClick = e => {
-    setMessage(message + e.native)
-  }
-  console.log(props.user, 'props.user')
+    setMessage(message + e.native);
+  };
+  console.log(props.user, 'props.user');
   return (
     <section className="chatbox-section">
       <h1 className="title">
         <Icon type="mail" /> CHATBOX
-    </h1>
+      </h1>
       <div className="content">
         <ScrollToBottom className="message-container">
           {conversationList.map(item => {
@@ -101,9 +100,21 @@ const Chatbox = props => {
             value={message}
             onChange={handleMessage}
           />
-          <Popover placement="topRight" content={<Picker onSelect={emojiClick} />} trigger="click" className="emoji-button">
+          <Button className="more-button">
+            <Icon type="appstore" theme="filled" className="send-icon" />
+          </Button>
+          <Popover
+            placement="topRight"
+            content={<Picker onSelect={emojiClick} />}
+            trigger="click"
+            className="emoji-button"
+          >
             <Button>
-              <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ899Ul2vNvOC2958E80je-twW9BNs0CveqgZuvYYrkecloJL5naw' alt="send" className="send-icon" />
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ899Ul2vNvOC2958E80je-twW9BNs0CveqgZuvYYrkecloJL5naw"
+                alt="send"
+                className="send-icon"
+              />
             </Button>
           </Popover>
           <Button onClick={handleSend} className="send-button">
@@ -112,9 +123,7 @@ const Chatbox = props => {
         </div>
       </div>
     </section>
-  )
-
-}
-
+  );
+};
 
 export default Chatbox;

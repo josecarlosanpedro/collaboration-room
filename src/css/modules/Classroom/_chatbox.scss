@@ -64,7 +64,7 @@
     resize: none;
     height: 100%;
     padding: 12px 10px;
-    padding-right: 25px;
+    padding-right: 73px;
     &:focus {
       border: 1px solid #3188bc;
     }
@@ -80,21 +80,32 @@
     border: none;
     border-radius: 10px;
   }
-  .emoji-button {
+  .more-button {
     width: 20px;
     height: 25px;
-    padding-right: 45px;
+    padding: 0;
     position: absolute;
-    bottom: 14px;
-    right: 10px;
+    bottom: 13px;
+    right: 57px;
     background: transparent;
     border: none;
     border-radius: 10px;
+    color: #3188bc;
   }
-  
+  .emoji-button {
+    width: 20px;
+    height: 25px;
+    position: absolute;
+    bottom: 14px;
+    right: 33px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0;
+  }
+
   .send-icon {
     width: 20px;
     border-radius: 10px;
   }
-  
 }
