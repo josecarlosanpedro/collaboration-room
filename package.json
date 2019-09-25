@@ -27,6 +27,7 @@
     "rxjs": "6.0.0",
     "rxjs-compat": "^6.3.3",
     "simplewebrtc": "^3.0.1",
+    "webrtc-adapter": "7.3.0",
     "uuid": "^3.3.2"
   },
   "scripts": {
