@@ -112,7 +112,7 @@ class CallPage extends Component {
     // we have to wait until it's ready
     this.webrtc.on("readyToCall", () => {
       // you can name it anything
-      this.webrtc.joinRoom(props.room);
+      this.webrtc.joinRoom("props.room");
     });
 
     this.webrtc.on("localScreenAdded", function (video) {
