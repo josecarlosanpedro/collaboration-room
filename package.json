@@ -26,8 +26,9 @@
     "redux-observable": "^1.0.0",
     "rxjs": "6.0.0",
     "rxjs-compat": "^6.3.3",
+    "uuid": "^3.3.2",
     "simplewebrtc": "^3.0.1",
-    "uuid": "^3.3.2"
+    "webrtc-adapter": "7.3.0"
   },
   "scripts": {
     "start": "react-scripts start",

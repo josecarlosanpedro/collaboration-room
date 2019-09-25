@@ -1,73 +1,213 @@
-import React, { Component } from 'react';
-import Icon from 'antd/lib/icon';
-import Modal from 'antd/lib/modal';
-import { peopleData } from '../../helpers/fakeData';
+// import React, { Component } from 'react';
+// import Icon from 'antd/lib/icon';
+// import Modal from 'antd/lib/modal';\
+// import SimpleWebRTC from "simplewebrtc";
+// import { peopleData } from '../../helpers/fakeData';
 
-class Videos extends Component {
+// class Videos extends Component {
+//   state = {
+//     showModal: false,
+//     currentUser: {},
+
+//   };
+
+//   handleClickItem = user => {
+//     console.log(user);
+//     this.setState({ showModal: true, currentUser: user });
+//   };
+
+//   handleCloseModal = () => {
+//     this.setState({ showModal: false, currentUser: {} });
+//   };
+
+//   render() {
+//     const { showModal, currentUser } = this.state;
+//     const displayModalTitle = (
+//       <span>
+//         <Icon type="user" className="fullname-icon" />
+//         {currentUser.firstName} {currentUser.lastName}
+//       </span>
+//     );
+//     return (
+//       <>
+//         <section className="videos-section">
+//           <h1 className="title">
+//             <Icon type="team" /> PEOPLE
+//           </h1>
+//           <div className="content">
+//             {peopleData.map(user => (
+//               <div
+//                 className="item-user"
+//                 key={user.id}
+//                 onClick={() => this.handleClickItem(user)}
+//               >
+//                 <div className="user-video">
+//                   <Icon type="video-camera" className="video-icon" />
+//                 </div>
+//                 <span className="user-fullname">
+//                   <Icon type="user" className="fullname-icon" />
+//                   {user.firstName} {user.lastName}
+//                 </span>
+//               </div>
+//             ))}
+//           </div>
+//         </section>
+//         <Modal
+//           className="modal-user-video"
+//           getContainer={() => document.querySelector('.videos-section')}
+//           title={displayModalTitle}
+//           visible={showModal}
+//           onOk={this.handleCloseModal}
+//           maskClosable={false}
+//           footer={null}
+//           centered
+//           onCancel={this.handleCloseModal}
+//         >
+//           <div className="video-container">
+//             <Icon type="video-camera" className="video-icon" />
+//           </div>
+//         </Modal>
+//       </>
+//     );
+//   }
+// }
+
+// export default Videos;
+import React, { Component } from "react";
+import SimpleWebRTC from "simplewebrtc";
+// import TrivagoLogo from "../components/TrivagoLogo";
+// import FontAwesomeIcon from "@fortawesome/react-fontawesome";
+// import faMicrophone from "@fortawesome/fontawesome-free-solid/faMicrophone";
+// import faMicrophoneSlash from "@fortawesome/fontawesome-free-solid/faMicrophoneSlash";
+// import faCamera from "@fortawesome/fontawesome-free-solid/faCamera";
+// import faSlideshare from "@fortawesome/fontawesome-free-brands/faSlideshare";
+
+class CallPage extends Component {
   state = {
-    showModal: false,
-    currentUser: {},
+    isMuted: false,
+    users: 1
+  };
+  webrct = null;
+  constructor(props) {
+    super();
+    this.webrtc = new SimpleWebRTC({
+      // the id/element dom element that will hold "our" video
+      localVideoEl: "localVideo",
+      // the id/element dom element that will hold remote videos
+      remoteVideosEl: "remoteVideos",
+      // immediately ask for camera access
+      autoRequestMedia: true
+    });
+
+    // a peer video has been added
+    this.webrtc.on("videoAdded", (video, peer) => {
+      video.controls = true;
+      this.setState({ users: this.state.users + 1 });
+    });
+
+    this.webrtc.on("videoRemoved", (video, peer) => {
+      this.setState({ users: this.state.users - 1 });
+    });
+
+    // we have to wait until it's ready
+    this.webrtc.on("readyToCall", () => {
+      // you can name it anything
+      this.webrtc.joinRoom(props.room);
+    });
+
+    this.webrtc.on("localScreenAdded", function (video) {
+      console.log(" sharing coming");
+
+      video.onclick = function () {
+        video.style.width = video.videoWidth + "px";
+        video.style.height = video.videoHeight + "px";
+      };
+      document.getElementById("localScreenContainer").appendChild(video);
+      document.getElementById("localScreenContainer").show();
+    });
+
+    // local screen removed
+    this.webrtc.on("localScreenRemoved", function (video) {
+      document.getElementById("localScreenContainer").removeChild(video);
+      document.getElementById("localScreenContainer").hide();
+    });
+  }
+
+  toggleMuteHandler = () => {
+    this.setState(prevState => ({
+      isMute: !prevState.isMute
+    }));
+
+    if (!this.state.isMuted) {
+      this.webrtc.mute();
+    } else {
+      this.webrtc.unmute();
+    }
   };
 
-  handleClickItem = user => {
-    console.log(user);
-    this.setState({ showModal: true, currentUser: user });
-  };
-
-  handleCloseModal = () => {
-    this.setState({ showModal: false, currentUser: {} });
+  onShareScreen = () => {
+    if (this.webrtc.getLocalScreen()) {
+      this.webrtc.stopScreenShare();
+    } else {
+      console.log("start sharing");
+      this.webrtc.shareScreen(err => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("ok");
+        }
+      });
+    }
   };
 
   render() {
-    const { showModal, currentUser } = this.state;
-    const displayModalTitle = (
-      <span>
-        <Icon type="user" className="fullname-icon" />
-        {currentUser.firstName} {currentUser.lastName}
-      </span>
-    );
+    const { room } = this.props;
+    const { users, isMute } = this.state;
     return (
-      <>
-        <section className="videos-section">
-          <h1 className="title">
-            <Icon type="team" /> PEOPLE
-          </h1>
-          <div className="content">
-            {peopleData.map(user => (
-              <div
-                className="item-user"
-                key={user.id}
-                onClick={() => this.handleClickItem(user)}
+      <React.Fragment>
+        <header className="header">
+          {/* <TrivagoLogo /> */}
+          <span className="header__room">
+            Room: {room} - Users: {users}
+          </span>
+        </header>
+        <main className="grid">
+          <div className="videos_you">
+            <p className="videos_you__title">You</p>
+            <video id="localVideo" />
+            <div className="videos_you__controls">
+              <button
+                onClick={this.toggleMuteHandler}
+                style={{ background: isMute ? "red" : "green" }}
               >
-                <div className="user-video">
-                  <Icon type="video-camera" className="video-icon" />
-                </div>
-                <span className="user-fullname">
-                  <Icon type="user" className="fullname-icon" />
-                  {user.firstName} {user.lastName}
-                </span>
-              </div>
-            ))}
+                {isMute ? (
+                  <span>no</span>
+                  // <FontAwesomeIcon size="lg" icon={faMicrophone} />
+                ) : (
+
+                    <span>no</span>
+                    // <FontAwesomeIcon size="lg" icon={faMicrophoneSlash} />
+                  )}
+              </button>
+              <button>
+                {/* <FontAwesomeIcon size="lg" icon={faCamera} /> */}
+
+                <span>no</span>
+              </button>
+              <button onClick={this.onShareScreen} className="btn">
+                {/* <FontAwesomeIcon size="lg" icon={faSlideshare} /> */}
+
+                <span>no</span>
+              </button>
+            </div>
+            <div id="localScreenContainer" />
+            <div id="remoteVideos" />
           </div>
-        </section>
-        <Modal
-          className="modal-user-video"
-          getContainer={() => document.querySelector('.videos-section')}
-          title={displayModalTitle}
-          visible={showModal}
-          onOk={this.handleCloseModal}
-          maskClosable={false}
-          footer={null}
-          centered
-          onCancel={this.handleCloseModal}
-        >
-          <div className="video-container">
-            <Icon type="video-camera" className="video-icon" />
-          </div>
-        </Modal>
-      </>
+        </main>
+      </React.Fragment>
     );
   }
 }
 
-export default Videos;
+export default CallPage;
+
