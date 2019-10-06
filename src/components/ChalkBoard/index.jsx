@@ -49,6 +49,7 @@ class ChalkBoard extends Component {
       expandControlled: false,
       text: 'a text, cool!',
       enableCopyPaste: false,
+      datafromFireBase: {},
     };
   }
 
@@ -182,6 +183,7 @@ class ChalkBoard extends Component {
       backgroundColor,
       enableRemoveSelected,
       enableCopyPaste,
+      datafromFireBase,
     } = this.state;
     return (
       <SizeMe>
@@ -231,6 +233,7 @@ class ChalkBoard extends Component {
                   ref={c => {
                     this._sketch = c;
                   }}
+                  value={datafromFireBase}
                   backgroundColor={backgroundColor}
                   onChange={this._download}
                 />
