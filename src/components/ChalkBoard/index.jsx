@@ -148,6 +148,7 @@ class ChalkBoard extends Component {
     this.setState({ drawings: drawings });
   };
 
+  //dito mo lagay yung para sa firebase na pag realtime
   _download = () => {
     const dataTopassToSocket = JSON.stringify(this._sketch.toJSON());
     let prev = this.state.canUndo;
@@ -155,6 +156,7 @@ class ChalkBoard extends Component {
     if (prev !== now) {
       this.setState({ canUndo: now });
     }
+    //eto dito yung function na pang pasa lagay mo dito
     console.log(dataTopassToSocket);
   };
 
