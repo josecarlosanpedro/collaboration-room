@@ -13,16 +13,16 @@ class App extends Component {
     })
   }
   componentDidMount() {
-    var firebaseConfig = {
-      apiKey: "AIzaSyCzNT7kATK_7XzUxD3RcyQmo7XoV7Kv-QM",
-      authDomain: "ale-classroom.firebaseapp.com",
-      databaseURL: "https://ale-classroom.firebaseio.com",
-      projectId: "ale-classroom",
-      storageBucket: "ale-classroom.appspot.com",
-      messagingSenderId: "613210030267",
-      appId: "1:613210030267:web:360fffe3a910f6ee4ce99e"
-    };
-    firebase.initializeApp(firebaseConfig);
+    // var firebaseConfig = {
+    //   apiKey: "AIzaSyCzNT7kATK_7XzUxD3RcyQmo7XoV7Kv-QM",
+    //   authDomain: "ale-classroom.firebaseapp.com",
+    //   databaseURL: "https://ale-classroom.firebaseio.com",
+    //   projectId: "ale-classroom",
+    //   storageBucket: "ale-classroom.appspot.com",
+    //   messagingSenderId: "613210030267",
+    //   appId: "1:613210030267:web:360fffe3a910f6ee4ce99e"
+    // };
+    // firebase.initializeApp(firebaseConfig);
     this.camera()
   }
 

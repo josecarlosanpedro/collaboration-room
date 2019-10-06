@@ -52,21 +52,34 @@ class ChalkBoard extends Component {
       datafromFireBase: {},
     };
   }
-
+  conversationSuccess = data => {
+    if (data.val() != null) {
+      const drawing = data.val()
+      console.log(drawing.data, 'drawing.data')
+      this.setState({ datafromFireBase: drawing.data })
+    }
+  };
+  conversationError = data => {
+    console.log('error', data);
+  };
   componentDidMount = () => {
-    // const conversation = firebase
-    //   .database()
-    //   .ref()
-    //   .child(`chat-box/123`);
+    var firebaseConfig = {
+      apiKey: "AIzaSyCzNT7kATK_7XzUxD3RcyQmo7XoV7Kv-QM",
+      authDomain: "ale-classroom.firebaseapp.com",
+      databaseURL: "https://ale-classroom.firebaseio.com",
+      projectId: "ale-classroom",
+      storageBucket: "ale-classroom.appspot.com",
+      messagingSenderId: "613210030267",
+      appId: "1:613210030267:web:360fffe3a910f6ee4ce99e"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
 
-    // conversation.on(
-    //   'value',
-    //   this.conversationSuccess(),
-    //   this.conversationError(),
-    // );
 
-    (function(console) {
-      console.save = function(data, filename) {
+
+    (function (console) {
+      console.save = function (data, filename) {
         if (!data) {
           console.error('Console.save: No data');
           return;
@@ -101,6 +114,11 @@ class ChalkBoard extends Component {
         a.dispatchEvent(e);
       };
     })(console);
+    const conversation = firebase
+      .database()
+      .ref()
+      .child(`board/${roomParam}`);
+    conversation.on('value', this.conversationSuccess, this.conversationError)
   };
 
   _undo = () => {
@@ -151,6 +169,9 @@ class ChalkBoard extends Component {
 
   //dito mo lagay yung para sa firebase na pag realtime
   _download = () => {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
     const dataTopassToSocket = JSON.stringify(this._sketch.toJSON());
     let prev = this.state.canUndo;
     let now = this._sketch.canUndo();
@@ -158,7 +179,19 @@ class ChalkBoard extends Component {
       this.setState({ canUndo: now });
     }
     //eto dito yung function na pang pasa lagay mo dito
-    console.log(dataTopassToSocket);
+    firebase
+      .database()
+      .ref()
+      .child(`board/${roomParam}`)
+      .set({
+        data: dataTopassToSocket,
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
+      })
+      .then(() => {
+        console.log('pass')
+        // console.log('pass');
+      });
+    // console.log(dataTopassToSocket);
   };
 
   handleSlider = value => {
