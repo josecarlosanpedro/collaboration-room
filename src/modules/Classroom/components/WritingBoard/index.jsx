@@ -1,12 +1,10 @@
 import React from 'react';
-import Icon from 'antd/lib/icon';
+import Chalkboard from '../../../../components/ChalkBoard';
 
-const WritingBoard = () => (
-  <section className="writing-board-section">
-    <h1 className="title">
-      <Icon type="edit" /> WRITING BOARD
-    </h1>
-  </section>
-);
+const WritingBoard = () => {
+  console.log('trying this');
+
+  return <Chalkboard />;
+};
 
 export default WritingBoard;
