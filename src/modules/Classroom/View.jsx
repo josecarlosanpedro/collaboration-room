@@ -3,7 +3,7 @@ import Videos from './components/Videos';
 import Chatbox from './components/Chatbox';
 import Documents from './components/Documents';
 import WritingBoard from './components/WritingBoard';
-import axios from 'axios'
+import axios from 'axios';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 
@@ -14,14 +14,16 @@ const Classroom = () => {
   const roleParam = urlParams.get('role');
   const idParam = urlParams.get('id');
   if (!roomParam || !roleParam || !idParam) {
-    console.log('not exist')
+    console.log('not exist');
   }
   useEffect(() => {
     if (roleParam === 'teacher') {
       axios
-        .get(`http://ec2-18-222-70-27.us-east-2.compute.amazonaws.com:3001/teacher/${idParam}`)
+        .get(
+          `http://ec2-18-222-70-27.us-east-2.compute.amazonaws.com:3001/teacher/${idParam}`,
+        )
         .then(response => {
-          setUser(response.data.user)
+          setUser(response.data.user);
           // setTeacher(response.data.user);
         })
         .catch(error => {
@@ -29,29 +31,28 @@ const Classroom = () => {
         });
     } else if (roleParam === 'student') {
       axios
-        .get(`http://ec2-18-222-70-27.us-east-2.compute.amazonaws.com:3001/student/${idParam}`)
+        .get(
+          `http://ec2-18-222-70-27.us-east-2.compute.amazonaws.com:3001/student/${idParam}`,
+        )
         .then(response => {
-          setUser(response.data.user)
+          setUser(response.data.user);
         })
         .catch(error => {
           console.error(error);
         });
     } else {
-      console.log('user not exist')
+      console.log('user not exist');
     }
-
   }, []);
-
 
   return (
     <section className="classroom-section">
-
       <Col md={24} lg={5} className="classroom-item">
         <Videos />
       </Col>
 
       <Col lg={12} md={24} className="classroom-item">
-        <WritingBoard />
+        <WritingBoard user={user} />
       </Col>
 
       <Col lg={7} md={24} className="classroom-item">
@@ -64,8 +65,7 @@ const Classroom = () => {
         </Row>
       </Col>
     </section>
-  )
-}
-
+  );
+};
 
 export default Classroom;

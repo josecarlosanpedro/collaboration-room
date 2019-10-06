@@ -4,7 +4,7 @@ import Chalkboard from '../../../../components/ChalkBoard';
 const WritingBoard = () => {
   console.log('trying this');
 
-  return <Chalkboard />;
+  return <Chalkboard room="board" />;
 };
 
 export default WritingBoard;
