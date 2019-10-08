@@ -280,7 +280,7 @@ class ChalkBoard extends Component {
       enableCopyPaste,
       datafromFireBase,
     } = this.state;
-    // console.log(this.state.writer == idParam || this.state.writer == "", 'this.state.writer == idParam || this.state.writer == "" ')
+    console.log(this.state.writer == idParam || this.state.writer == "", 'this.state.writer == idParam || this.state.writer == "" ')
     return (
       <SizeMe>
         {({ size }) => {
@@ -321,8 +321,8 @@ class ChalkBoard extends Component {
               <>
                 <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
                   <SketchField
-                    width={size.width * 0.95}
-                    height={size.height * 0.95}
+                    width={size.width}
+                    height={size.height}
                     tool={tool}
                     lineColor={lineColor}
                     disabled={true}
