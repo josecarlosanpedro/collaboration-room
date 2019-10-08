@@ -50,14 +50,21 @@ class ChalkBoard extends Component {
       text: 'a text, cool!',
       enableCopyPaste: false,
       datafromFireBase: {},
-      writer: ""
+      writer: "",
+      size: {},
+      width: "",
+      height: "",
     };
   }
   conversationSuccess = data => {
     if (data.val() != null) {
       const drawing = data.val()
       console.log(drawing.data, 'drawing.data')
-      this.setState({ datafromFireBase: drawing.data })
+      this.setState({
+        datafromFireBase: drawing.data,
+        width: drawing.width,
+        height: drawing.height
+      })
     }
   };
   conversationError = data => {
@@ -203,6 +210,8 @@ class ChalkBoard extends Component {
         .set({
           data: dataTopassToSocket,
           timestamp: firebase.database.ServerValue.TIMESTAMP,
+          // width: this.state.size.width,
+          // height: this.state.size.height,
         })
         .then(() => {
           console.log('pass')
@@ -261,14 +270,19 @@ class ChalkBoard extends Component {
       )
       .then(() => {
         console.log('writing')
-      });
+      });;
+  }
+  boardSize = data => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
+    //eto dito yung function na pang pasa lagay mo dito
 
-    ;
   }
   render() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const idParam = urlParams.get('id');
+    const roleParam = urlParams.get('role');
     const {
       tool,
       lineWidth,
@@ -282,166 +296,168 @@ class ChalkBoard extends Component {
     } = this.state;
     console.log(this.state.writer == idParam || this.state.writer == "", 'this.state.writer == idParam || this.state.writer == "" ')
     return (
-      <SizeMe>
-        {({ size }) => {
-          console.log('size', size);
-
-          return (
-            <div className="writing-board-section">
-              <h1 className="title">
-                <Icon type="edit" /> WRITING BOARD
+      // <SizeMe>
+      //   {({ size }) => {
+      //     console.log('size', size);
+      //     if (roleParam === "teacher") {
+      //       this.setState({ size: size })
+      //     }
+      // return (
+      <div className="writing-board-section">
+        <h1 className="title">
+          <Icon type="edit" /> WRITING BOARD
               </h1>
 
+        <Button
+          className="round-btn"
+          shape="circle"
+          disabled={!this.state.canUndo}
+          onClick={this._undo}
+          icon="undo"
+        />
+        <Button
+          className="round-btn"
+          shape="circle"
+          disabled={!this.state.canRedo}
+          onClick={this._redo}
+          icon="redo"
+        />
+        <Button
+          className="round-btn"
+          shape="circle"
+          icon="close"
+          onClick={this._clear}
+        />
+        <Button
+          className="round-btn"
+          shape="circle"
+          icon="save"
+          onClick={this._save}
+        />
+        <>
+          <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
+            <SketchField
+              // width={this.state.width}
+              // height={this.state.height}
+              tool={tool}
+              lineColor={lineColor}
+              disabled={true}
+              lineWidth={lineWidth}
+              fillColor={fillWithColor ? fillColor : 'transparent'}
+              ref={c => {
+                this._sketch = c;
+              }}
+              value={datafromFireBase}
+              backgroundColor={backgroundColor}
+              onChange={this._download}
+            />
+          </div>
+        </>
+
+        <div className="_spacer-md" />
+
+        <div className="action">
+          <Collapse onChange={this.handleChangePanel}>
+            <Panel header="Drawing Tools">
+              <Select
+                defaultValue="Pencil"
+                style={{ width: 120 }}
+                onChange={this.handleChangeTool}
+              >
+                <Option value={Tools.Select}>Select</Option>
+                <Option value={Tools.Pencil}>Pencil</Option>
+                <Option value={Tools.Rectangle}>Rectangle</Option>
+                <Option value={Tools.Line}>Line</Option>
+                <Option value={Tools.Circle}>Circle</Option>
+                <Option value={Tools.Pan}>Pan</Option>
+              </Select>
+
               <Button
                 className="round-btn"
+                type="primary"
                 shape="circle"
-                disabled={!this.state.canUndo}
-                onClick={this._undo}
-                icon="undo"
+                icon="copy"
+                size="medium"
+                disabled={!enableCopyPaste}
+                onClick={e => {
+                  this._sketch.copy();
+                  this._sketch.paste();
+                }}
               />
+
               <Button
                 className="round-btn"
+                type="primary"
                 shape="circle"
-                disabled={!this.state.canRedo}
-                onClick={this._redo}
-                icon="redo"
+                icon="delete"
+                size="medium"
+                disabled={!enableRemoveSelected}
+                onClick={this._removeSelected}
               />
+              <div className="_spacer-sm" />
+              <p>Size</p>
+              <Slider
+                defaultValue={lineWidth}
+                onChange={this.handleSlider}
+              />
+            </Panel>
+            <Panel header="Colors">
+              <p className="title">Line Color</p>
+              <CompactPicker
+                id="lineColor"
+                color={lineColor}
+                onChange={color =>
+                  this.setState({ lineColor: color.hex })
+                }
+              />
+              <div className="_spacer-sm" />
+              <p className="title">With Fill Color?</p>
+              <Switch onChange={this.handleChangeSwitch} />
+              <div className="_spacer-sm" />
+              <p className="title">Fill Color</p>
+              <CompactPicker
+                id="fillColor"
+                color={fillColor}
+                onChange={color =>
+                  this.setState({ fillColor: color.hex })
+                }
+              />
+              <div className="_spacer-sm" />
+              <p className="title">Background Color</p>
+              <CompactPicker
+                color={backgroundColor}
+                onChange={color =>
+                  this.setState({ backgroundColor: color.hex })
+                }
+              />
+            </Panel>
+            <Panel header="Image Tool">
+              <p>Add Image</p>
+              <Input
+                placeholder="Copy/Paste an image URL"
+                onChange={e =>
+                  this.setState({ imageUrl: e.target.value })
+                }
+                value={this.state.imageUrl}
+              />
+              <div className="_spacer-sm" />
               <Button
-                className="round-btn"
-                shape="circle"
-                icon="close"
-                onClick={this._clear}
-              />
-              <Button
-                className="round-btn"
-                shape="circle"
-                icon="save"
-                onClick={this._save}
-              />
-              <>
-                <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
-                  <SketchField
-                    width={size.width - 25}
-                    height={size.height}
-                    tool={tool}
-                    lineColor={lineColor}
-                    disabled={true}
-                    lineWidth={lineWidth}
-                    fillColor={fillWithColor ? fillColor : 'transparent'}
-                    ref={c => {
-                      this._sketch = c;
-                    }}
-                    value={datafromFireBase}
-                    backgroundColor={backgroundColor}
-                    onChange={this._download}
-                  />
-                </div>
-              </>
-
-              <div className="_spacer-md" />
-
-              <div className="action">
-                <Collapse onChange={this.handleChangePanel}>
-                  <Panel header="Drawing Tools">
-                    <Select
-                      defaultValue="Pencil"
-                      style={{ width: 120 }}
-                      onChange={this.handleChangeTool}
-                    >
-                      <Option value={Tools.Select}>Select</Option>
-                      <Option value={Tools.Pencil}>Pencil</Option>
-                      <Option value={Tools.Rectangle}>Rectangle</Option>
-                      <Option value={Tools.Line}>Line</Option>
-                      <Option value={Tools.Circle}>Circle</Option>
-                      <Option value={Tools.Pan}>Pan</Option>
-                    </Select>
-
-                    <Button
-                      className="round-btn"
-                      type="primary"
-                      shape="circle"
-                      icon="copy"
-                      size="medium"
-                      disabled={!enableCopyPaste}
-                      onClick={e => {
-                        this._sketch.copy();
-                        this._sketch.paste();
-                      }}
-                    />
-
-                    <Button
-                      className="round-btn"
-                      type="primary"
-                      shape="circle"
-                      icon="delete"
-                      size="medium"
-                      disabled={!enableRemoveSelected}
-                      onClick={this._removeSelected}
-                    />
-                    <div className="_spacer-sm" />
-                    <p>Size</p>
-                    <Slider
-                      defaultValue={lineWidth}
-                      onChange={this.handleSlider}
-                    />
-                  </Panel>
-                  <Panel header="Colors">
-                    <p className="title">Line Color</p>
-                    <CompactPicker
-                      id="lineColor"
-                      color={lineColor}
-                      onChange={color =>
-                        this.setState({ lineColor: color.hex })
-                      }
-                    />
-                    <div className="_spacer-sm" />
-                    <p className="title">With Fill Color?</p>
-                    <Switch onChange={this.handleChangeSwitch} />
-                    <div className="_spacer-sm" />
-                    <p className="title">Fill Color</p>
-                    <CompactPicker
-                      id="fillColor"
-                      color={fillColor}
-                      onChange={color =>
-                        this.setState({ fillColor: color.hex })
-                      }
-                    />
-                    <div className="_spacer-sm" />
-                    <p className="title">Background Color</p>
-                    <CompactPicker
-                      color={backgroundColor}
-                      onChange={color =>
-                        this.setState({ backgroundColor: color.hex })
-                      }
-                    />
-                  </Panel>
-                  <Panel header="Image Tool">
-                    <p>Add Image</p>
-                    <Input
-                      placeholder="Copy/Paste an image URL"
-                      onChange={e =>
-                        this.setState({ imageUrl: e.target.value })
-                      }
-                      value={this.state.imageUrl}
-                    />
-                    <div className="_spacer-sm" />
-                    <Button
-                      className="add-image-btn"
-                      type="primary"
-                      onClick={e => {
-                        this._sketch.addImg(this.state.imageUrl);
-                      }}
-                    >
-                      Load Image from URL
+                className="add-image-btn"
+                type="primary"
+                onClick={e => {
+                  this._sketch.addImg(this.state.imageUrl);
+                }}
+              >
+                Load Image from URL
                     </Button>
-                  </Panel>
-                </Collapse>
-              </div>
-            </div>
-          );
-        }}
-      </SizeMe>
+            </Panel>
+          </Collapse>
+        </div>
+      </div>
     );
+    // }}
+    // </SizeMe>
+    // );
   }
 }
 
