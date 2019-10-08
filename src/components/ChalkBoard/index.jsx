@@ -50,6 +50,7 @@ class ChalkBoard extends Component {
       text: 'a text, cool!',
       enableCopyPaste: false,
       datafromFireBase: {},
+      writer: ""
     };
   }
   conversationSuccess = data => {
@@ -60,6 +61,16 @@ class ChalkBoard extends Component {
     }
   };
   conversationError = data => {
+    console.log('error', data);
+  };
+  boardWritterSuccess = data => {
+    if (data.val() != null) {
+      const writer = data.val()
+      console.log(writer.writerID, 'writer.writerID');
+      this.setState({ writer: writer.writerID })
+    }
+  };
+  boardWritterError = data => {
     console.log('error', data);
   };
   componentDidMount = () => {
@@ -119,6 +130,11 @@ class ChalkBoard extends Component {
       .ref()
       .child(`board/${roomParam}`);
     conversation.on('value', this.conversationSuccess, this.conversationError)
+    const boardwritting = firebase
+      .database()
+      .ref()
+      .child(`boardwriter/${roomParam}`);
+    boardwritting.on('value', this.boardWritterSuccess, this.boardWritterError)
   };
 
   _undo = () => {
@@ -172,25 +188,29 @@ class ChalkBoard extends Component {
 
     const urlParams = new URLSearchParams(window.location.search);
     const roomParam = urlParams.get('room');
-    const dataTopassToSocket = JSON.stringify(this._sketch.toJSON());
     let prev = this.state.canUndo;
     let now = this._sketch.canUndo();
     if (prev !== now) {
       this.setState({ canUndo: now });
     }
+
+    const dataTopassToSocket = JSON.stringify(this._sketch.toJSON());
+    setTimeout(function () {
+      firebase
+        .database()
+        .ref()
+        .child(`board/${roomParam}`)
+        .set({
+          data: dataTopassToSocket,
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+        })
+        .then(() => {
+          console.log('pass')
+          // console.log('pass');
+        });
+    }, 100)
     //eto dito yung function na pang pasa lagay mo dito
-    firebase
-      .database()
-      .ref()
-      .child(`board/${roomParam}`)
-      .set({
-        data: dataTopassToSocket,
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-      })
-      .then(() => {
-        console.log('pass')
-        // console.log('pass');
-      });
+
     // console.log(dataTopassToSocket);
   };
 
@@ -205,8 +225,50 @@ class ChalkBoard extends Component {
   _removeSelected = () => {
     this._sketch.removeSelected();
   };
+  writingDown = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
+    const idParam = urlParams.get('id');
+    //eto dito yung function na pang pasa lagay mo dito
+    firebase
+      .database()
+      .ref()
+      .child(`boardwriter/${roomParam}`)
+      .set({
+        writerID: idParam,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }
+      )
+      .then(() => {
+        console.log('writing')
+        // console.log('pass');
+      });
 
+  }
+  writingUp = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
+    const idParam = urlParams.get('id');
+    //eto dito yung function na pang pasa lagay mo dito
+    firebase
+      .database()
+      .ref()
+      .child(`boardwriter/${roomParam}`)
+      .set({
+        writerID: "",
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }
+      )
+      .then(() => {
+        console.log('writing')
+      });
+
+    ;
+  }
   render() {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const idParam = urlParams.get('id');
     const {
       tool,
       lineWidth,
@@ -218,6 +280,7 @@ class ChalkBoard extends Component {
       enableCopyPaste,
       datafromFireBase,
     } = this.state;
+    // console.log(this.state.writer == idParam || this.state.writer == "", 'this.state.writer == idParam || this.state.writer == "" ')
     return (
       <SizeMe>
         {({ size }) => {
@@ -256,20 +319,24 @@ class ChalkBoard extends Component {
                 onClick={this._save}
               />
               <>
-                <SketchField
-                  width={size.width * 0.95}
-                  height={size.height * 0.95}
-                  tool={tool}
-                  lineColor={lineColor}
-                  lineWidth={lineWidth}
-                  fillColor={fillWithColor ? fillColor : 'transparent'}
-                  ref={c => {
-                    this._sketch = c;
-                  }}
-                  value={datafromFireBase}
-                  backgroundColor={backgroundColor}
-                  onChange={this._download}
-                />
+                <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
+                  <SketchField
+                    width={size.width * 0.95}
+                    height={size.height * 0.95}
+                    tool={tool}
+                    lineColor={lineColor}
+                    disabled={true}
+                    lineWidth={lineWidth}
+                    fillColor={fillWithColor ? fillColor : 'transparent'}
+                    ref={c => {
+                      this._sketch = c;
+                    }}
+                    value={datafromFireBase}
+                    backgroundColor={backgroundColor}
+                    onChange={this._download}
+                  />
+                </div>
+
               </>
 
               <div className="_spacer-md" />
