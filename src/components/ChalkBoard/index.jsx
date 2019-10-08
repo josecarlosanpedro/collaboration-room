@@ -321,7 +321,7 @@ class ChalkBoard extends Component {
               <>
                 <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
                   <SketchField
-                    width={size.width}
+                    width={size.width - 25}
                     height={size.height}
                     tool={tool}
                     lineColor={lineColor}
@@ -336,7 +336,6 @@ class ChalkBoard extends Component {
                     onChange={this._download}
                   />
                 </div>
-
               </>
 
               <div className="_spacer-md" />
