@@ -6,6 +6,7 @@ import WritingBoard from './components/WritingBoard';
 import axios from 'axios';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
+import { SizeMe } from 'react-sizeme';
 
 const Classroom = () => {
   const [user, setUser] = useState({});
@@ -46,25 +47,36 @@ const Classroom = () => {
   }, []);
 
   return (
-    <section className="classroom-section">
-      <Col md={24} lg={5} className="classroom-item">
-        <Videos />
-      </Col>
+    <SizeMe>
+      {({ size }) => {
+        const hasExceedLargeScreen = size.width > 1600
+        const smSize = [5, 13, 5]
+        const lgSize = [24, 24, 24]
+        const colSize = hasExceedLargeScreen ? smSize : lgSize
+        return (
+          <section className="classroom-section">
+            <Col md={colSize[0]} className="classroom-item">
+              <Videos />
+            </Col>
 
-      <Col lg={12} md={24} className="classroom-item">
-        <WritingBoard user={user} />
-      </Col>
+            <Col md={colSize[1]} className="classroom-item">
+              <WritingBoard user={user} />
+            </Col>
 
-      <Col lg={7} md={24} className="classroom-item">
-        <Row className="classroom-item-right">
-          <Documents user={user} room={roomParam} />
-        </Row>
+            <Col md={colSize[2]} className="classroom-item">
+              <Row className="classroom-item-right">
+                <Documents user={user} room={roomParam} />
+              </Row>
 
-        <Row className="classroom-item-right">
-          <Chatbox user={user} room={roomParam} />
-        </Row>
-      </Col>
-    </section>
+              <Row className="classroom-item-right">
+                <Chatbox user={user} room={roomParam} />
+              </Row>
+            </Col>
+          </section>
+        )
+      }}
+    </SizeMe>
+
   );
 };
 

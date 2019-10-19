@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import classnames from 'classnames'
 import { CompactPicker } from 'react-color';
 import firebase from 'firebase';
 import Collapse from 'antd/lib/collapse';
 import Select from 'antd/lib/select';
 import Slider from 'antd/lib/slider';
 import Icon from 'antd/lib/icon';
+import Row from 'antd/lib/row';
+import Col from 'antd/lib/col';
 import Switch from 'antd/lib/switch';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
@@ -56,7 +59,6 @@ class ChalkBoard extends Component {
   conversationSuccess = data => {
     if (data.val() != null) {
       const drawing = data.val()
-      console.log(drawing.data, 'drawing.data')
       this.setState({ datafromFireBase: drawing.data })
     }
   };
@@ -206,12 +208,9 @@ class ChalkBoard extends Component {
         })
         .then(() => {
           console.log('pass')
-          // console.log('pass');
         });
     }, 100)
-    //eto dito yung function na pang pasa lagay mo dito
 
-    // console.log(dataTopassToSocket);
   };
 
   handleSlider = value => {
@@ -229,7 +228,6 @@ class ChalkBoard extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const roomParam = urlParams.get('room');
     const idParam = urlParams.get('id');
-    //eto dito yung function na pang pasa lagay mo dito
     firebase
       .database()
       .ref()
@@ -241,7 +239,6 @@ class ChalkBoard extends Component {
       )
       .then(() => {
         console.log('writing')
-        // console.log('pass');
       });
 
   }
@@ -249,7 +246,6 @@ class ChalkBoard extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const roomParam = urlParams.get('room');
     const idParam = urlParams.get('id');
-    //eto dito yung function na pang pasa lagay mo dito
     firebase
       .database()
       .ref()
@@ -284,8 +280,10 @@ class ChalkBoard extends Component {
     return (
       <SizeMe>
         {({ size }) => {
-          console.log('size', size);
-
+          const isBoardExceedWidth = size.width > 1026
+          const lgSize = [24, 24]
+          const smSize = [19, 5]
+          const colSize = isBoardExceedWidth ? smSize : lgSize
           return (
             <div className="writing-board-section">
               <h1 className="title">
@@ -318,125 +316,134 @@ class ChalkBoard extends Component {
                 icon="save"
                 onClick={this._save}
               />
-              <>
-                <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
-                  <SketchField
-                    width={size.width - 25}
-                    height={size.height}
-                    tool={tool}
-                    lineColor={lineColor}
-                    disabled={true}
-                    lineWidth={lineWidth}
-                    fillColor={fillWithColor ? fillColor : 'transparent'}
-                    ref={c => {
-                      this._sketch = c;
-                    }}
-                    value={datafromFireBase}
-                    backgroundColor={backgroundColor}
-                    onChange={this._download}
-                  />
-                </div>
-              </>
 
-              <div className="_spacer-md" />
-
-              <div className="action">
-                <Collapse onChange={this.handleChangePanel}>
-                  <Panel header="Drawing Tools">
-                    <Select
-                      defaultValue="Pencil"
-                      style={{ width: 120 }}
-                      onChange={this.handleChangeTool}
-                    >
-                      <Option value={Tools.Select}>Select</Option>
-                      <Option value={Tools.Pencil}>Pencil</Option>
-                      <Option value={Tools.Rectangle}>Rectangle</Option>
-                      <Option value={Tools.Line}>Line</Option>
-                      <Option value={Tools.Circle}>Circle</Option>
-                      <Option value={Tools.Pan}>Pan</Option>
-                    </Select>
-
-                    <Button
-                      className="round-btn"
-                      type="primary"
-                      shape="circle"
-                      icon="copy"
-                      size="medium"
-                      disabled={!enableCopyPaste}
-                      onClick={e => {
-                        this._sketch.copy();
-                        this._sketch.paste();
+              <Row>
+                <Col md={colSize[0]}>
+                  <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
+                    <SketchField
+                      width={960}
+                      height={size.height}
+                      tool={tool}
+                      lineColor={lineColor}
+                      disabled={true}
+                      lineWidth={lineWidth}
+                      fillColor={fillWithColor ? fillColor : 'transparent'}
+                      ref={c => {
+                        this._sketch = c;
                       }}
+                      value={datafromFireBase}
+                      backgroundColor={backgroundColor}
+                      onChange={this._download}
                     />
+                  </div>
+                </Col>
 
-                    <Button
-                      className="round-btn"
-                      type="primary"
-                      shape="circle"
-                      icon="delete"
-                      size="medium"
-                      disabled={!enableRemoveSelected}
-                      onClick={this._removeSelected}
-                    />
-                    <div className="_spacer-sm" />
-                    <p>Size</p>
-                    <Slider
-                      defaultValue={lineWidth}
-                      onChange={this.handleSlider}
-                    />
-                  </Panel>
-                  <Panel header="Colors">
-                    <p className="title">Line Color</p>
-                    <CompactPicker
-                      id="lineColor"
-                      color={lineColor}
-                      onChange={color =>
-                        this.setState({ lineColor: color.hex })
-                      }
-                    />
-                    <div className="_spacer-sm" />
-                    <p className="title">With Fill Color?</p>
-                    <Switch onChange={this.handleChangeSwitch} />
-                    <div className="_spacer-sm" />
-                    <p className="title">Fill Color</p>
-                    <CompactPicker
-                      id="fillColor"
-                      color={fillColor}
-                      onChange={color =>
-                        this.setState({ fillColor: color.hex })
-                      }
-                    />
-                    <div className="_spacer-sm" />
-                    <p className="title">Background Color</p>
-                    <CompactPicker
-                      color={backgroundColor}
-                      onChange={color =>
-                        this.setState({ backgroundColor: color.hex })
-                      }
-                    />
-                  </Panel>
-                  <Panel header="Image Tool">
-                    <p>Add Image</p>
-                    <Input
-                      placeholder="Copy/Paste an image URL"
-                      onChange={e =>
-                        this.setState({ imageUrl: e.target.value })
-                      }
-                      value={this.state.imageUrl}
-                    />
-                    <div className="_spacer-sm" />
-                    <Button
-                      className="add-image-btn"
-                      type="primary"
-                      onClick={e => {
-                        this._sketch.addImg(this.state.imageUrl);
-                      }}
-                    >
-                      Load Image from URL
+                <Col md={colSize[1]}>
+                  <div className="action">
+                    <Collapse onChange={this.handleChangePanel}>
+                      <Panel header="Drawing Tools">
+                        <Select
+                          defaultValue="Pencil"
+                          style={{ width: 120 }}
+                          onChange={this.handleChangeTool}
+                        >
+                          <Option value={Tools.Select}>Select</Option>
+                          <Option value={Tools.Pencil}>Pencil</Option>
+                          <Option value={Tools.Rectangle}>Rectangle</Option>
+                          <Option value={Tools.Line}>Line</Option>
+                          <Option value={Tools.Circle}>Circle</Option>
+                          <Option value={Tools.Pan}>Pan</Option>
+                        </Select>
+
+                        <Button
+                          className="round-btn"
+                          type="primary"
+                          shape="circle"
+                          icon="copy"
+                          size="medium"
+                          disabled={!enableCopyPaste}
+                          onClick={e => {
+                            this._sketch.copy();
+                            this._sketch.paste();
+                          }}
+                        />
+
+                        <Button
+                          className="round-btn"
+                          type="primary"
+                          shape="circle"
+                          icon="delete"
+                          size="medium"
+                          disabled={!enableRemoveSelected}
+                          onClick={this._removeSelected}
+                        />
+                        <div className="_spacer-sm" />
+                        <p>Size</p>
+                        <Slider
+                          defaultValue={lineWidth}
+                          onChange={this.handleSlider}
+                        />
+                      </Panel>
+                      <Panel header="Colors">
+                        <p className="title">Line Color</p>
+                        <CompactPicker
+                          className={classnames({ "-sm": isBoardExceedWidth })}
+                          id="lineColor"
+                          color={lineColor}
+                          onChange={color =>
+                            this.setState({ lineColor: color.hex })
+                          }
+                        />
+                        <div className="_spacer-sm" />
+                        <p className="title">With Fill Color?</p>
+                        <Switch onChange={this.handleChangeSwitch} />
+                        <div className="_spacer-sm" />
+                        <p className="title">Fill Color</p>
+                        <CompactPicker
+                          className={classnames({ "-sm": isBoardExceedWidth })}
+                          id="fillColor"
+                          size={isBoardExceedWidth ? 100 : null}
+                          color={fillColor}
+                          onChange={color =>
+                            this.setState({ fillColor: color.hex })
+                          }
+                        />
+                        <div className="_spacer-sm" />
+                        <p className="title">Background Color</p>
+                        <CompactPicker
+                          className={classnames({ "-sm": isBoardExceedWidth })}
+                          color={backgroundColor}
+                          size={isBoardExceedWidth ? 100 : null}
+                          onChange={color =>
+                            this.setState({ backgroundColor: color.hex })
+                          }
+                        />
+                      </Panel>
+                      <Panel header="Image Tool">
+                        <p>Add Image</p>
+                        <Input
+                          placeholder="Copy/Paste an image URL"
+                          onChange={e =>
+                            this.setState({ imageUrl: e.target.value })
+                          }
+                          value={this.state.imageUrl}
+                        />
+                        <div className="_spacer-sm" />
+                        <Button
+                          className="add-image-btn"
+                          type="primary"
+                          onClick={e => {
+                            this._sketch.addImg(this.state.imageUrl);
+                          }}
+                        >
+                          Load Image from URL
                     </Button>
-                  </Panel>
-                </Collapse>
-              </div>
+                      </Panel>
+                    </Collapse>
+                  </div>
+                </Col>
+              </Row>
+
             </div>
           );
         }}
