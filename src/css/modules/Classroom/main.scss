@@ -3,6 +3,11 @@
   @import './documents';
   @import './videos';
   @import './writing-board';
+  .videos-section {
+    .item-user {
+      min-height: 300px;
+    }
+  }
   @media only screen and (min-width: 1200px) {
     width: 100%;
     min-height: 600px;
@@ -22,6 +27,7 @@
   
     .classroom-item .classroom-item-right {
       height: 50%;
+      min-height: 300px;
       &:first-child {
         padding-bottom: 20px;
       }
@@ -67,6 +73,7 @@
   
     .classroom-item .classroom-item-right {
       height: 50%;
+      min-height: 300px;
       &:first-child {
         padding-bottom: 20px;
       }
@@ -112,6 +119,7 @@
   
     .classroom-item .classroom-item-right {
       height: 50%;
+      min-height: 300px;
       &:first-child {
         padding-bottom: 20px;
       }
