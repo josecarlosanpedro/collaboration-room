@@ -1,18 +1,19 @@
-import React, { Component } from 'react';
-import classnames from 'classnames'
-import { CompactPicker } from 'react-color';
-import firebase from 'firebase';
-import Collapse from 'antd/lib/collapse';
-import Select from 'antd/lib/select';
-import Slider from 'antd/lib/slider';
-import Icon from 'antd/lib/icon';
-import Row from 'antd/lib/row';
-import Col from 'antd/lib/col';
-import Switch from 'antd/lib/switch';
-import Button from 'antd/lib/button';
-import Input from 'antd/lib/input';
-import { SizeMe } from 'react-sizeme';
-import { SketchField, Tools } from 'react-sketch';
+import React, { Component } from "react";
+import classnames from "classnames";
+import { CompactPicker } from "react-color";
+import firebase from "firebase";
+import Collapse from "antd/lib/collapse";
+import Select from "antd/lib/select";
+import Slider from "antd/lib/slider";
+import Icon from "antd/lib/icon";
+import Row from "antd/lib/row";
+import Col from "antd/lib/col";
+import Switch from "antd/lib/switch";
+import Button from "antd/lib/button";
+import Input from "antd/lib/input";
+import Upload from "antd/lib/upload";
+import { SizeMe } from "react-sizeme";
+import { SketchField, Tools } from "react-sketch";
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -23,9 +24,9 @@ class ChalkBoard extends Component {
 
     this.state = {
       lineWidth: 10,
-      lineColor: 'black',
-      fillColor: '#68CCCA',
-      backgroundColor: 'transparent',
+      lineColor: "black",
+      fillColor: "#68CCCA",
+      backgroundColor: "transparent",
       shadowWidth: 0,
       shadowOffset: 0,
       tool: Tools.Pencil,
@@ -41,16 +42,16 @@ class ChalkBoard extends Component {
       stretched: true,
       stretchedX: false,
       stretchedY: false,
-      originX: 'left',
-      originY: 'top',
-      imageUrl: '',
+      originX: "left",
+      originY: "top",
+      imageUrl: "",
       expandTools: false,
       expandControls: false,
       expandColors: false,
       expandBack: false,
       expandImages: false,
       expandControlled: false,
-      text: 'a text, cool!',
+      text: "a text, cool!",
       enableCopyPaste: false,
       datafromFireBase: {},
       writer: ""
@@ -58,22 +59,22 @@ class ChalkBoard extends Component {
   }
   conversationSuccess = data => {
     if (data.val() != null) {
-      const drawing = data.val()
-      this.setState({ datafromFireBase: drawing.data })
+      const drawing = data.val();
+      this.setState({ datafromFireBase: drawing.data });
     }
   };
   conversationError = data => {
-    console.log('error', data);
+    console.log("error", data);
   };
   boardWritterSuccess = data => {
     if (data.val() != null) {
-      const writer = data.val()
-      console.log(writer.writerID, 'writer.writerID');
-      this.setState({ writer: writer.writerID })
+      const writer = data.val();
+      console.log(writer.writerID, "writer.writerID");
+      this.setState({ writer: writer.writerID });
     }
   };
   boardWritterError = data => {
-    console.log('error', data);
+    console.log("error", data);
   };
   componentDidMount = () => {
     var firebaseConfig = {
@@ -87,28 +88,26 @@ class ChalkBoard extends Component {
     };
     firebase.initializeApp(firebaseConfig);
     const urlParams = new URLSearchParams(window.location.search);
-    const roomParam = urlParams.get('room');
+    const roomParam = urlParams.get("room");
 
-
-
-    (function (console) {
-      console.save = function (data, filename) {
+    (function(console) {
+      console.save = function(data, filename) {
         if (!data) {
-          console.error('Console.save: No data');
+          console.error("Console.save: No data");
           return;
         }
-        if (!filename) filename = 'console.json';
-        if (typeof data === 'object') {
+        if (!filename) filename = "console.json";
+        if (typeof data === "object") {
           data = JSON.stringify(data, undefined, 4);
         }
-        var blob = new Blob([data], { type: 'text/json' }),
-          e = document.createEvent('MouseEvents'),
-          a = document.createElement('a');
+        var blob = new Blob([data], { type: "text/json" }),
+          e = document.createEvent("MouseEvents"),
+          a = document.createElement("a");
         a.download = filename;
         a.href = window.URL.createObjectURL(blob);
-        a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+        a.dataset.downloadurl = ["text/json", a.download, a.href].join(":");
         e.initMouseEvent(
-          'click',
+          "click",
           true,
           false,
           window,
@@ -122,7 +121,7 @@ class ChalkBoard extends Component {
           false,
           false,
           0,
-          null,
+          null
         );
         a.dispatchEvent(e);
       };
@@ -131,19 +130,19 @@ class ChalkBoard extends Component {
       .database()
       .ref()
       .child(`board/${roomParam}`);
-    conversation.on('value', this.conversationSuccess, this.conversationError)
+    conversation.on("value", this.conversationSuccess, this.conversationError);
     const boardwritting = firebase
       .database()
       .ref()
       .child(`boardwriter/${roomParam}`);
-    boardwritting.on('value', this.boardWritterSuccess, this.boardWritterError)
+    boardwritting.on("value", this.boardWritterSuccess, this.boardWritterError);
   };
 
   _undo = () => {
     this._sketch.undo();
     this.setState({
       canUndo: this._sketch.canUndo(),
-      canRedo: this._sketch.canRedo(),
+      canRedo: this._sketch.canRedo()
     });
   };
 
@@ -151,31 +150,31 @@ class ChalkBoard extends Component {
     this._sketch.redo();
     this.setState({
       canUndo: this._sketch.canUndo(),
-      canRedo: this._sketch.canRedo(),
+      canRedo: this._sketch.canRedo()
     });
   };
 
   _clear = () => {
     this._sketch.clear();
-    this._sketch.setBackgroundFromDataUrl('');
+    this._sketch.setBackgroundFromDataUrl("");
     this.setState({
       controlledValue: null,
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
       fillWithBackgroundColor: false,
       canUndo: this._sketch.canUndo(),
-      canRedo: this._sketch.canRedo(),
+      canRedo: this._sketch.canRedo()
     });
   };
 
   handleChangePanel = key => {
-    console.log('key', key);
+    console.log("key", key);
   };
 
   handleChangeTool = key => {
     this.setState({
       tool: key,
       enableRemoveSelected: key === Tools.Select,
-      enableCopyPaste: key === Tools.Select,
+      enableCopyPaste: key === Tools.Select
     });
   };
 
@@ -187,9 +186,8 @@ class ChalkBoard extends Component {
 
   //dito mo lagay yung para sa firebase na pag realtime
   _download = () => {
-
     const urlParams = new URLSearchParams(window.location.search);
-    const roomParam = urlParams.get('room');
+    const roomParam = urlParams.get("room");
     let prev = this.state.canUndo;
     let now = this._sketch.canUndo();
     if (prev !== now) {
@@ -197,20 +195,19 @@ class ChalkBoard extends Component {
     }
 
     const dataTopassToSocket = JSON.stringify(this._sketch.toJSON());
-    setTimeout(function () {
+    setTimeout(function() {
       firebase
         .database()
         .ref()
         .child(`board/${roomParam}`)
         .set({
           data: dataTopassToSocket,
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
         })
         .then(() => {
-          console.log('pass')
+          console.log("pass");
         });
-    }, 100)
-
+    }, 100);
   };
 
   handleSlider = value => {
@@ -224,10 +221,11 @@ class ChalkBoard extends Component {
   _removeSelected = () => {
     this._sketch.removeSelected();
   };
+
   writingDown = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const roomParam = urlParams.get('room');
-    const idParam = urlParams.get('id');
+    const roomParam = urlParams.get("room");
+    const idParam = urlParams.get("id");
     firebase
       .database()
       .ref()
@@ -235,17 +233,16 @@ class ChalkBoard extends Component {
       .set({
         writerID: idParam,
         timestamp: firebase.database.ServerValue.TIMESTAMP
-      }
-      )
+      })
       .then(() => {
-        console.log('writing')
+        console.log("writing");
       });
+  };
 
-  }
   writingUp = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const roomParam = urlParams.get('room');
-    const idParam = urlParams.get('id');
+    const roomParam = urlParams.get("room");
+    const idParam = urlParams.get("id");
     firebase
       .database()
       .ref()
@@ -253,18 +250,46 @@ class ChalkBoard extends Component {
       .set({
         writerID: "",
         timestamp: firebase.database.ServerValue.TIMESTAMP
-      }
-      )
+      })
       .then(() => {
-        console.log('writing')
+        console.log("writing");
       });
+  };
 
-    ;
-  }
+  handleChangeBackGround = info => {
+    {
+      let sketch = this._sketch;
+      let reader = new FileReader();
+      let { stretched, stretchedX, stretchedY, originX, originY } = this.state;
+      console.log(info, "info");
+      reader.addEventListener(
+        "load",
+        () =>
+          sketch.setBackgroundFromDataUrl(reader.result, {
+            stretched: stretched,
+            stretchedX: stretchedX,
+            stretchedY: stretchedY,
+            originX: originX,
+            originY: originY
+          }),
+        false
+      );
+      reader.readAsDataURL(info.file);
+    }
+  };
+
+  uploadProps = {
+    name: "file",
+    accept: ".jpeg,.svg,.png,.jpg",
+    customRequest: this.handleChangeBackGround,
+    headers: {
+      authorization: "authorization-text"
+    },
+    showUploadList: false
+  };
   render() {
-
     const urlParams = new URLSearchParams(window.location.search);
-    const idParam = urlParams.get('id');
+    const idParam = urlParams.get("id");
     const {
       tool,
       lineWidth,
@@ -274,16 +299,19 @@ class ChalkBoard extends Component {
       backgroundColor,
       enableRemoveSelected,
       enableCopyPaste,
-      datafromFireBase,
+      datafromFireBase
     } = this.state;
-    console.log(this.state.writer == idParam || this.state.writer == "", 'this.state.writer == idParam || this.state.writer == "" ')
+    console.log(
+      this.state.writer == idParam || this.state.writer == "",
+      'this.state.writer == idParam || this.state.writer == "" '
+    );
     return (
       <SizeMe>
         {({ size }) => {
-          const isBoardExceedWidth = size.width > 1026
-          const lgSize = [24, 24]
-          const smSize = [19, 5]
-          const colSize = isBoardExceedWidth ? smSize : lgSize
+          const isBoardExceedWidth = size.width > 1026;
+          const lgSize = [24, 24];
+          const smSize = [19, 5];
+          const colSize = isBoardExceedWidth ? smSize : lgSize;
           return (
             <div className="writing-board-section">
               <h1 className="title">
@@ -319,7 +347,15 @@ class ChalkBoard extends Component {
 
               <Row>
                 <Col md={colSize[0]}>
-                  <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
+                  <div
+                    onMouseDown={this.writingDown}
+                    onMouseUp={this.writingUp}
+                    className={
+                      this.state.writer == idParam || this.state.writer == ""
+                        ? ""
+                        : "board-disable"
+                    }
+                  >
                     <SketchField
                       width={850}
                       height={size.height}
@@ -327,7 +363,7 @@ class ChalkBoard extends Component {
                       lineColor={lineColor}
                       disabled={true}
                       lineWidth={lineWidth}
-                      fillColor={fillWithColor ? fillColor : 'transparent'}
+                      fillColor={fillWithColor ? fillColor : "transparent"}
                       ref={c => {
                         this._sketch = c;
                       }}
@@ -437,13 +473,22 @@ class ChalkBoard extends Component {
                           }}
                         >
                           Load Image from URL
-                    </Button>
+                        </Button>
+                      </Panel>
+                      <Panel header="Background">
+                        <p>Change Background</p>
+
+                        <div className="_spacer-sm" />
+                        <Upload {...this.uploadProps}>
+                          <Button className="add-image-btn" type="primary">
+                            Load Image
+                          </Button>
+                        </Upload>
                       </Panel>
                     </Collapse>
                   </div>
                 </Col>
               </Row>
-
             </div>
           );
         }}
