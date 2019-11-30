@@ -55,23 +55,23 @@ const Classroom = () => {
         const colSize = hasExceedLargeScreen ? smSize : lgSize
         return (
           <section className="classroom-section">
-            <Col md={colSize[0]} className="classroom-item">
+            <div className="classroom-item video">
               <Videos />
-            </Col>
+            </div>
 
-            <Col md={colSize[1]} className="classroom-item">
+            <div className="classroom-item white-board">
               <WritingBoard user={user} />
-            </Col>
+            </div>
 
-            <Col md={colSize[2]} className="classroom-item">
-              <Row className="classroom-item-right">
+            <div className="classroom-item right-side">
+              <div className="classroom-item-right">
                 <Documents user={user} room={roomParam} />
-              </Row>
+              </div>
 
-              <Row className="classroom-item-right">
+              <div className="classroom-item-right">
                 <Chatbox user={user} room={roomParam} />
-              </Row>
-            </Col>
+              </div>
+            </div>
           </section>
         )
       }}

@@ -321,7 +321,7 @@ class ChalkBoard extends Component {
                 <Col md={colSize[0]}>
                   <div onMouseDown={this.writingDown} onMouseUp={this.writingUp} className={this.state.writer == idParam || this.state.writer == "" ? "" : "board-disable"}>
                     <SketchField
-                      width={960}
+                      width={850}
                       height={size.height}
                       tool={tool}
                       lineColor={lineColor}
