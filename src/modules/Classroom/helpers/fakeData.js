@@ -29,18 +29,7 @@ export const peopleData = [
     lastName: 'San Miguel',
     roleName: 'Student',
   },
-  {
-    id: 3,
-    firstName: 'Nicho',
-    lastName: 'Guimbaolibot',
-    roleName: 'Student',
-  },
-  {
-    id: 4,
-    firstName: 'Victor Angelo',
-    lastName: 'Sapongay',
-    roleName: 'Student',
-  },
+
 ];
 
 export const messageData = [

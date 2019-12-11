@@ -7,13 +7,19 @@ import Button from 'antd/lib/button';
 import sendIcon from '../../../../images/send_icon.png';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import firebase from 'firebase';
+import Modal from 'antd/lib/modal'
 import uuid from 'uuid/v1';
 import 'emoji-mart/css/emoji-mart.css';
+import GifList from './gifData';
 import { Picker } from 'emoji-mart';
 
 const Chatbox = props => {
   const [message, setMessage] = useState('');
   const [conversationList, setConversationList] = useState([]);
+  const [emojiShow, setEmojiShow] = useState({
+   state: false,
+   url: ""
+  });
 
   useEffect(() => {
 
@@ -61,6 +67,31 @@ const Chatbox = props => {
   const emojiClick = e => {
     setMessage(message + e.native);
   };
+  const showEmoji = gif => {
+    let secondsToGo = 3;
+    setEmojiShow({
+      state: true,
+      url: gif.url
+    })
+    setTimeout(() => {
+      setEmojiShow({
+        state: false,
+        url: ""
+      });
+    }, secondsToGo * 1000);
+  }
+  const emojiContent = (
+    <div>
+      {GifList.map(gif => {
+        return (
+          <div>
+          <Button className="gif-btn" onClick={() => showEmoji(gif)}><p>{gif.title}</p></Button>
+          </div>
+        )
+      })}
+    </div>
+  );
+  
   console.log(props.user, 'props.user');
   return (
     <section className="chatbox-section">
@@ -101,9 +132,12 @@ const Chatbox = props => {
             value={message}
             onChange={handleMessage}
           />
-          <Button className="more-button">
-            <Icon type="appstore" theme="filled" className="send-icon" />
-          </Button>
+          <Popover placement="topLeft" className="chatbox-popover"  content={emojiContent}>
+            <Button className="more-button">
+            < Icon type="appstore" theme="filled" className="send-icon" />
+            </Button>
+          </Popover>
+          
           <Popover
             placement="topRight"
             content={<Picker onSelect={emojiClick} />}
@@ -122,7 +156,22 @@ const Chatbox = props => {
             <img src={sendIcon} alt="send" className="send-icon" />
           </Button>
         </div>
+        
       </div>
+      <Modal
+          className="modal-gif"
+          style={{ top: 20 }}
+          visible={emojiShow.state}
+          footer={null}
+          title={null}
+          onCancel={() => {
+            setEmojiShow(false)
+          }}
+    
+          maskClosable={true}
+        >
+          <img className="gif-section" src={emojiShow.url} alt={emojiShow.title} />
+        </Modal>
     </section>
   );
 };

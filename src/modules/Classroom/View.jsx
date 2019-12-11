@@ -10,6 +10,7 @@ import { SizeMe } from 'react-sizeme';
 
 const Classroom = () => {
   const [user, setUser] = useState({});
+  const [background, setBackground] = useState("");
   const urlParams = new URLSearchParams(window.location.search);
   const roomParam = urlParams.get('room');
   const roleParam = urlParams.get('role');
@@ -45,7 +46,9 @@ const Classroom = () => {
       console.log('user not exist');
     }
   }, []);
-
+  const handleBackground = value => {
+    setBackground(value)
+  }
   return (
     <SizeMe>
       {({ size }) => {
@@ -54,9 +57,17 @@ const Classroom = () => {
         const lgSize = [24, 24, 24]
         const colSize = hasExceedLargeScreen ? smSize : lgSize
         return (
-          <section className="classroom-section">
+          <section className="classroom-section" 
+            style={{
+              backgroundImage:`url(${background})`,
+              backgroundSize: 'cover'
+              // height:"100%",
+              // width:"100%"
+              // backgroundRepeat:"no-repeat"
+            }}
+          >
             <div className="classroom-item video">
-              <Videos />
+              <Videos handleBackground={handleBackground}/>
             </div>
 
             <div className="classroom-item white-board">

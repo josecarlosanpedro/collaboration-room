@@ -1,11 +1,13 @@
 const Gif = [
   {
-    title: 'way to go',
-    url: 'https://media1.tenor.com/images/2edee99e7bb149e9f20762565e1c2839/tenor.gif?itemid=8057675'
+    id:'happy-star',
+    title: 'Happy Star',
+    url: 'https://media1.giphy.com/media/lPSQYkqJGgqK5w35hr/source.gif'
   },
   {
-    title: 'minion',
-    url: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/original_images/tenor_1.gif'
+    id: 'sad-start',
+    title: 'Sad Start',
+    url: 'https://media1.giphy.com/media/67ut3lBN11aLZhzMTG/source.gif'
   }
 ]
 export default Gif;
