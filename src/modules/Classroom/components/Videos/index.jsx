@@ -62,7 +62,8 @@ class Videos extends Component {
                 </span>
               </div>
             ))}
-
+          {this.props.role === "teacher" && 
+          <div>
           <Radio.Group defaultValue="teacher" className="_spacer-bottom-sm " size="large">
             <Radio.Button value="teacher">Teacher</Radio.Button>
             <Radio.Button value="student">Student</Radio.Button>
@@ -90,6 +91,8 @@ class Videos extends Component {
               </div>
             </Modal>
           </div>
+          </div>
+          }
           </div>
         </section>
         <Modal

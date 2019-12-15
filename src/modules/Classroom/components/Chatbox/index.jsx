@@ -10,7 +10,7 @@ import firebase from 'firebase';
 import Modal from 'antd/lib/modal'
 import uuid from 'uuid/v1';
 import 'emoji-mart/css/emoji-mart.css';
-import GifList from './gifData';
+import {GifChild, GifAdult, GifGroup} from './gifData';
 import { Picker } from 'emoji-mart';
 
 const Chatbox = props => {
@@ -81,18 +81,32 @@ const Chatbox = props => {
     }, secondsToGo * 1000);
   }
   const emojiContent = (
-    <div>
-      {GifList.map(gif => {
-        return (
-          <div>
-          <Button className="gif-btn" onClick={() => showEmoji(gif)}><p>{gif.title}</p></Button>
-          </div>
-        )
-      })}
+    <div className="emoji-popover-content">
+      <div>
+        {GifChild.map(gif => {
+          return (
+              <img onClick={() => showEmoji(gif)} className="gif-picker-section" src={gif.url} alt={gif.url} />
+          )
+        })}
+      </div>
+      <div>
+        {GifAdult.map(gif => {
+          return (
+              <img onClick={() => showEmoji(gif)} className="gif-picker-section" src={gif.url} alt={gif.url} />
+          )
+        })}
+      </div>
+      <div>
+        {GifGroup.map(gif => {
+          return (
+              <img onClick={() => showEmoji(gif)} className="gif-picker-section" src={gif.url} alt={gif.url} />
+          )
+        })}
+      </div>
     </div>
   );
   
-  console.log(props.user, 'props.user');
+  console.log(props, 'props.user');
   return (
     <section className="chatbox-section">
       <h1 className="title">
@@ -132,12 +146,13 @@ const Chatbox = props => {
             value={message}
             onChange={handleMessage}
           />
-          <Popover placement="topLeft" className="chatbox-popover"  content={emojiContent}>
-            <Button className="more-button">
-            < Icon type="appstore" theme="filled" className="send-icon" />
-            </Button>
-          </Popover>
-          
+          {props.role === "teacher" && 
+            <Popover placement="topLeft" className="chatbox-popover"  content={emojiContent}>
+              <Button className="more-button">
+              < Icon type="appstore" theme="filled" className="send-icon" />
+              </Button>
+            </Popover>
+          }
           <Popover
             placement="topRight"
             content={<Picker onSelect={emojiClick} />}
@@ -171,7 +186,7 @@ const Chatbox = props => {
           maskClosable={true}
         >
           <img className="gif-section" src={emojiShow.url} alt={emojiShow.title} />
-        </Modal>
+      </Modal>
     </section>
   );
 };

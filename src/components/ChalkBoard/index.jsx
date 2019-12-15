@@ -10,6 +10,7 @@ import Row from "antd/lib/row";
 import Col from "antd/lib/col";
 import Switch from "antd/lib/switch";
 import Button from "antd/lib/button";
+import Popover from 'antd/lib/popover'
 import Input from "antd/lib/input";
 import Upload from "antd/lib/upload";
 import { SizeMe } from "react-sizeme";
@@ -37,8 +38,8 @@ class ChalkBoard extends Component {
       canUndo: false,
       canRedo: false,
       controlledSize: false,
-      sketchWidth: 600,
-      sketchHeight: 600,
+      sketchWidth: 848,
+      sketchHeight: 512,
       stretched: true,
       stretchedX: false,
       stretchedY: false,
@@ -49,7 +50,7 @@ class ChalkBoard extends Component {
       expandControls: false,
       expandColors: false,
       expandBack: false,
-      expandImages: false,
+      expandImages: true,
       expandControlled: false,
       text: "a text, cool!",
       enableCopyPaste: false,
@@ -59,6 +60,7 @@ class ChalkBoard extends Component {
   }
   conversationSuccess = data => {
     if (data.val() != null) {
+      
       const drawing = data.val();
       this.setState({ datafromFireBase: drawing.data });
     }
@@ -203,7 +205,7 @@ class ChalkBoard extends Component {
         .set({
           data: dataTopassToSocket,
           timestamp: firebase.database.ServerValue.TIMESTAMP
-        })
+        })    
         .then(() => {
           console.log("pass");
         });
@@ -267,8 +269,8 @@ class ChalkBoard extends Component {
         () =>
           sketch.setBackgroundFromDataUrl(reader.result, {
             stretched: stretched,
-            stretchedX: stretchedX,
-            stretchedY: stretchedY,
+            stretchedX: 1000,
+            stretchedY: 1000,
             originX: originX,
             originY: originY
           }),
@@ -298,7 +300,6 @@ class ChalkBoard extends Component {
       fillWithColor,
       backgroundColor,
       enableRemoveSelected,
-      enableCopyPaste,
       datafromFireBase
     } = this.state;
     console.log(
@@ -372,12 +373,94 @@ class ChalkBoard extends Component {
                       onChange={this._download}
                     />
                   </div>
+                  <div className="option-section">
+                  <div className="tools-section">
+                    <Popover placement="leftTop" content={
+                      <div>
+                      <Select
+                        defaultValue="Pencil"
+                        style={{ width: 120 }}
+                        onChange={this.handleChangeTool}
+                      >
+                        {/* <Option value={Tools.Select}>Select</Option> */}
+                        <Option value={Tools.Pencil}>Pencil</Option>
+                        <Option value={Tools.Rectangle}>Rectangle</Option>
+                        <Option value={Tools.Line}>Line</Option>
+                        <Option value={Tools.Circle}>Circle</Option>
+                        <Option value={Tools.Pan}>Pan</Option>
+                      </Select>
+                      <Button
+                          className="round-btn"
+                          type="primary"
+                          shape="circle"
+                          icon="copy"
+                          size="medium"
+                          disabled={!this.state.enableCopyPaste}
+                          onClick={e => {
+                            this._sketch.copy();
+                            this._sketch.paste();
+                          }}
+                        />
+                
+                        <Button
+                          className="round-btn"
+                          type="primary"
+                          shape="circle"
+                          icon="delete"
+                          size="medium"
+                          disabled={!this.state.enableRemoveSelected}
+                          onClick={this._removeSelected}
+                        />
+                        <div className="_spacer-sm" />
+                        <p>Size</p>
+                        <Slider
+                          defaultValue={this.state.lineWidth}
+                          onChange={this.handleSlider}
+                        />
+                      </div>
+                    } trigger="click">
+                      <Button icon="tool" />
+                    </Popover>
+                  </div>
+                  <div className="tools-section">
+                    <Popover placement="leftTop" content={
+                      <div>
+                        <Upload {...this.uploadProps}>
+                          <Button className="add-image-btn" type="primary">
+                            Load Image
+                          </Button>
+                        </Upload>
+                        {/* <p>Add Image</p>
+                        <Input
+                          placeholder="Copy/Paste an image URL"
+                          onChange={e =>
+                            this.setState({ imageUrl: e.target.value })
+                          }
+                          value={this.state.imageUrl}
+                        />
+                        <div className="_spacer-sm" />
+                        <Button
+                          className="add-image-btn"
+                          type="primary"
+                          onClick={e => {
+                            this._sketch.addImg(this.state.imageUrl);
+                          }}
+                        >
+                          Load Image from URL
+                        </Button> */}
+                      </div>
+                    } trigger="click">
+                      <Button icon="file-image" />
+                    </Popover>
+                    </div>
+                  </div>
+                  
                 </Col>
 
                 <Col md={colSize[1]}>
                   <div className="action">
                     <Collapse onChange={this.handleChangePanel}>
-                      <Panel header="Drawing Tools">
+                      {/* <Panel header="Drawing Tools">
                         <Select
                           defaultValue="Pencil"
                           style={{ width: 120 }}
@@ -397,7 +480,7 @@ class ChalkBoard extends Component {
                           shape="circle"
                           icon="copy"
                           size="medium"
-                          disabled={!enableCopyPaste}
+                          disabled={!this.state.enableCopyPaste}
                           onClick={e => {
                             this._sketch.copy();
                             this._sketch.paste();
@@ -419,8 +502,8 @@ class ChalkBoard extends Component {
                           defaultValue={lineWidth}
                           onChange={this.handleSlider}
                         />
-                      </Panel>
-                      <Panel header="Colors">
+                      </Panel> */}
+                      {/* <Panel header="Colors">
                         <p className="title">Line Color</p>
                         <CompactPicker
                           className={classnames({ "-sm": isBoardExceedWidth })}
@@ -454,8 +537,8 @@ class ChalkBoard extends Component {
                             this.setState({ backgroundColor: color.hex })
                           }
                         />
-                      </Panel>
-                      <Panel header="Image Tool">
+                      </Panel> */}
+                      {/* <Panel header="Image Tool">
                         <p>Add Image</p>
                         <Input
                           placeholder="Copy/Paste an image URL"
@@ -474,8 +557,8 @@ class ChalkBoard extends Component {
                         >
                           Load Image from URL
                         </Button>
-                      </Panel>
-                      <Panel header="Background">
+                      </Panel> */}
+                      {/* <Panel header="Background">
                         <p>Change Background</p>
 
                         <div className="_spacer-sm" />
@@ -484,7 +567,7 @@ class ChalkBoard extends Component {
                             Load Image
                           </Button>
                         </Upload>
-                      </Panel>
+                      </Panel> */}
                     </Collapse>
                   </div>
                 </Col>

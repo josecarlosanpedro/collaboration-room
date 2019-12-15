@@ -67,7 +67,7 @@ const Classroom = () => {
             }}
           >
             <div className="classroom-item video">
-              <Videos handleBackground={handleBackground}/>
+              <Videos role={roleParam}  handleBackground={handleBackground}/>
             </div>
 
             <div className="classroom-item white-board">
@@ -80,7 +80,7 @@ const Classroom = () => {
               </div>
 
               <div className="classroom-item-right">
-                <Chatbox user={user} room={roomParam} />
+                <Chatbox user={user} role={roleParam} room={roomParam} />
               </div>
             </div>
           </section>
